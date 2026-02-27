@@ -1,4 +1,4 @@
-name: Build Windows EXE
+name: Build Windows EXE (onefile)
 
 on:
   workflow_dispatch:
@@ -22,13 +22,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyside6 pandas openpyxl pyinstaller
 
-      - name: Build EXE (onedir, windowed)
+      - name: Build EXE (onefile, windowed)
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --clean --windowed --name ProjectorTool projector_tool_app.py
+          pyinstaller --noconfirm --clean --onefile --windowed --name ProjectorTool `
+            --collect-all PySide6 `
+            --collect-all shiboken6 `
+            projector_tool_app.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ProjectorTool-windows
-          path: dist/ProjectorTool/**
+          name: ProjectorTool-windows-onefile
+          path: dist/ProjectorTool.exe
