@@ -14,19 +14,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.9"
 
       - name: Install dependencies
+        shell: pwsh
         run: |
           python -m pip install --upgrade pip
           pip install pyside6 pandas openpyxl pyinstaller
 
-      - name: Build EXE
+      - name: Build EXE (onedir, windowed)
+        shell: pwsh
         run: |
-          pyinstaller --noconfirm --onefile --windowed --name ProjectorTool projector_tool_app.py
+          pyinstaller --noconfirm --clean --windowed --name ProjectorTool projector_tool_app.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ProjectorTool-windows
-          path: dist/ProjectorTool.exe
+          path: dist/ProjectorTool/**
